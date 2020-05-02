@@ -27,7 +27,8 @@ cl_uint     numplatformsConv;
 cl_device_id* deviceListConv = NULL;
 cl_uint numDevicesConv;
 
-//OpenCL kernel which is run for every work item created.
+// OpenCL kernel which is run for every work item created.
+// play with __global/__local parameters to check the performance
 const char *convKernel =
         "    // put your code below                                     \n"
         "    // put your code above                                     \n";

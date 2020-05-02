@@ -24,7 +24,8 @@ cl_uint     numPlatforms;
 cl_device_id* deviceList = NULL;
 cl_uint numDevices;
 
-//OpenCL kernel which is run for every work item created.
+// OpenCL kernel which is run for every work item created.
+// play with __global/__local parameters to check the performance
 const char *leakyReLU_kernel =
         "__kernel                                   \n"
         "void leakyReLU_kernel(float leak,          \n"

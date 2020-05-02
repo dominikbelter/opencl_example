@@ -13,7 +13,8 @@
 
 size_t VECTOR_SIZE = pow(2,27);
 
-//OpenCL kernel which is run for every work item created.
+// OpenCL kernel which is run for every work item created.
+// play with __global/__local parameters to check the performance
 const char *leakyReLUKernel =
         "__kernel                                   \n"
         "void leakyReLUKernel(float leak,          \n"
