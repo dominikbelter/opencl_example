@@ -4,7 +4,7 @@
 #if defined(__APPLE__) || defined(__MACOSX)
 #include <OpenCL/cl.hpp>
 #else
-#include <CL/cl.hpp>
+#include <CL/opencl.hpp>
 #endif
 #include <cstdio>
 #include <cstdlib>
@@ -44,7 +44,7 @@ int main(void)
             std::cout << "Device #" << i << ": " << devices[i].getInfo<CL_DEVICE_NAME>() << std::endl;
         }
     }
-    catch (cl::Error err) {
+    catch (cl::Error& err) {
         std::cerr << "ERROR: " << err.what() << "(" << err.err() << ")\n";
     }
 

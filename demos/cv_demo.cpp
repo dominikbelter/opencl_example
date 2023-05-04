@@ -38,11 +38,11 @@ int main()
     try {
         cv::Mat image;
         // load image
-        image = cv::imread("../../resources/messor2.jpg", CV_LOAD_IMAGE_COLOR);
+        image = cv::imread("../../resources/messor2.jpg", cv::IMREAD_COLOR);
         //        cv::GaussianBlur( image, image, cv::Size( 21, 21 ), 5, 5 );
         cv::Mat gray;
         // Convert the image to grayscale
-        cv::cvtColor(image, gray, CV_BGR2GRAY );
+        cv::cvtColor(image, gray, cv::COLOR_BGRA2GRAY );
 
         std::vector<unsigned char> input = toVector(gray);
 
@@ -53,12 +53,13 @@ int main()
         size_t vectorSize = input.size();
         std::vector<unsigned char> output(vectorSize,0.0);
         std::vector<char> mask = {-1,0,1,-1,0,1,-1,0,1};
+        std::vector<char> mask_cl = {-1,-1,-1,0,0,0,1,1,1};
         // initialize opencl
         initializeOpenCLConv(image.rows, image.cols);
 
         //compute convolution using OpenCL
         std::chrono::steady_clock::time_point beginCL = std::chrono::steady_clock::now();
-        computeoutputConv(&input.front(), &mask.front(), &output.front(), gray.rows, gray.cols);
+        computeoutputConv(&input.front(), &mask_cl.front(), &output.front(), gray.rows, gray.cols);
         std::chrono::steady_clock::time_point endCL = std::chrono::steady_clock::now();
         std::cout << "Time difference for OpenCL= " <<
                      std::chrono::duration_cast<std::chrono::microseconds>(endCL - beginCL).count() << "[µs]\n";

@@ -7,6 +7,7 @@
 #include <OpenCL/cl.h>
 #else
 #include <CL/cl.h>
+#include <CL/cl_ext.h>
 #endif
 
 cl_kernel kernel;
@@ -75,7 +76,7 @@ void initializeOpenCL(int vector_size)
 
     /// Build program
     clStatus = clBuildProgram(program, 1, deviceList, NULL, NULL, NULL);
-    if (clStatus!=0){
+    if (clStatus!=CL_SUCCESS){
         printf("Error building program\n");
     }
 
@@ -112,13 +113,13 @@ void computeoutput(float leak, float *input, float *output, int vector_size){
     size_t local_size = 64;           // Process one item at a time
     clStatus = clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL);
 
-//    // multiple layers - uncomment this to see advantages of OpenCL
-//    // (do the same for the CPU example in the cpp_demo.cpp)
-//    int layer_no=0;
-//    clStatus = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void *)&outputClmem);
-//    for (layer_no=0;layer_no<10;layer_no++){
-//        clStatus = clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL);
-//    }
+    // multiple layers - uncomment this to see advantages of OpenCL
+    // (do the same for the CPU example in the cpp_demo.cpp)
+    int layer_no=0;
+    clStatus = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void *)&outputClmem);
+    for (layer_no=0;layer_no<10;layer_no++){
+        clStatus = clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL);
+    }
 
     /// Download results
     clStatus = clEnqueueReadBuffer(commandQueue, outputClmem, CL_TRUE, 0, vector_size * sizeof(float), output,

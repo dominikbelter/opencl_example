@@ -6,6 +6,7 @@
 #include <OpenCL/cl.h>
 #else
 #include <CL/cl.h>
+#include <CL/cl_ext.h>
 #endif
 #include <ctime>
 #include <time.h>
@@ -95,6 +96,11 @@ int main(void) {
 
     /// Build program
     clStatus = clBuildProgram(program, 1, deviceList, NULL, NULL, NULL);
+
+    if (clStatus!=CL_SUCCESS){
+        printf("Error building program\n");
+    }
+
 
     /// Create the kernel
     cl_kernel kernel = clCreateKernel(program, "leakyReLUKernel", &clStatus);
