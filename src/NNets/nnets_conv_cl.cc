@@ -27,12 +27,33 @@ cl_uint     numplatformsConv;
 cl_device_id* deviceListConv = NULL;
 cl_uint numDevicesConv;
 
-// OpenCL kernel for each work item
+//OpenCL kernel which is run for every work item created.
 const char *convKernel =
-        "    // put your code below                                     \n"
-        "    // put your code above                                     \n";
+        "__kernel                                                       \n"
+        "void convKernel(__global unsigned char* input,                \n"
+        "                  __global char* mask,                         \n"
+        "                  __global unsigned char* output,              \n"
+        "                  int rows,                                    \n"
+        "                  int cols)                                    \n"
+        "{                                                              \n"
+        "    //Get the index                                            \n"
+        "    int index = get_global_id(0);                              \n"
+        "    int rowNo = index/cols;                                    \n"
+        "    int colNo = index%cols;                                    \n"
+        "    if (rowNo>0&&rowNo<rows-1&&colNo>0&&colNo<cols){           \n"
+        "       int row,col;                                            \n"
+        "       int sum=0;                                              \n"
+        "       for (row=-1;row<2;row++){                               \n"
+        "           for (col=-1;col<2;col++){                           \n"
+        "               int maskIndex = (row+1)*3+(col+1);              \n"
+        "               int imageIndex = (rowNo+row)*cols+(colNo+col);  \n"
+        "               sum+= input[imageIndex]*mask[maskIndex];        \n"
+        "           }                                                   \n"
+        "       }                                                       \n"
+        "       output[index] = (unsigned char)abs(sum);                \n"
+        "    }                                                          \n"
+        "}                                                              \n";
 
-/// convolution using CPU
 void conv_c(unsigned char *input, char *mask, unsigned char *output, int rows, int cols, int index)
 {
     int rowNo = index/cols;
@@ -114,14 +135,16 @@ void computeoutputConv(unsigned char *input, char *mask, unsigned char *output, 
     }
     
     /// Define arguments
-    /// define the arguments for your kernel below
-    /// ...
-    /// define the arguments for your kernel abowe
+    clStatus = clSetKernelArg(kernelConv, 0, sizeof(cl_mem), (void *)&inputConvClmem);
+    clStatus = clSetKernelArg(kernelConv, 1, sizeof(cl_mem), (void *)&maskConvClmem);
+    clStatus = clSetKernelArg(kernelConv, 2, sizeof(cl_mem), (void *)&outputConvClmem);
+    clStatus = clSetKernelArg(kernelConv, 3, sizeof(int), (void *)&rows);
+    clStatus = clSetKernelArg(kernelConv, 4, sizeof(int), (void *)&cols);
     
     /// Execute the kernel
     size_t global_size = cols*rows; // Process the entire lists
     size_t local_size = 64;           // Process one item at a time
-    clStatus = clEnqueueNDRangeKernel(commandQueueConv, kernelConv, 1, NULL, &global_size, &local_size,
+    clStatus = clEnqueueNDRangeKernel(commandQueueConv, kernelConv, 1, NULL, &global_size, NULL,
                                       0, NULL, NULL);
     
     /// Download results

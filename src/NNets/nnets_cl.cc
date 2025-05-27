@@ -7,7 +7,6 @@
 #include <OpenCL/cl.h>
 #else
 #include <CL/cl.h>
-#include <CL/cl_ext.h>
 #endif
 
 cl_kernel kernel;
@@ -25,7 +24,7 @@ cl_uint     numPlatforms;
 cl_device_id* deviceList = NULL;
 cl_uint numDevices;
 
-// OpenCL kernel for each work item
+//OpenCL kernel which is run for every work item created.
 const char *leakyReLU_kernel =
         "__kernel                                   \n"
         "void leakyReLU_kernel(float leak,          \n"
@@ -76,7 +75,7 @@ void initializeOpenCL(int vector_size)
 
     /// Build program
     clStatus = clBuildProgram(program, 1, deviceList, NULL, NULL, NULL);
-    if (clStatus!=CL_SUCCESS){
+    if (clStatus!=0){
         printf("Error building program\n");
     }
 

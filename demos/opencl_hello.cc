@@ -44,7 +44,7 @@ int main(void)
             std::cout << "Device #" << i << ": " << devices[i].getInfo<CL_DEVICE_NAME>() << std::endl;
         }
     }
-    catch (cl::Error& err) {
+    catch (cl::Error err) {
         std::cerr << "ERROR: " << err.what() << "(" << err.err() << ")\n";
     }
 

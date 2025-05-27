@@ -22,13 +22,9 @@
 extern "C" {
 #endif
 
-/// initialize OpenCL
 void initializeOpenCLConv(int rows, int cols);
-/// convolution using CPU
 void conv_c(unsigned char *input, char *mask, unsigned char *output, int rows, int cols, int index);
-/// convolution using OpenCL
 void computeoutputConv(unsigned char *input, char *mask, unsigned char *output, int rows, int cols);
-/// Release OpenCL
 void releaseOpenCL();
 
 #ifdef __cplusplus

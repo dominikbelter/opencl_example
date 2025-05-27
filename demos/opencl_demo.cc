@@ -6,15 +6,14 @@
 #include <OpenCL/cl.h>
 #else
 #include <CL/cl.h>
-#include <CL/cl_ext.h>
 #endif
 #include <ctime>
 #include <time.h>
 #include <math.h>
 
-size_t VECTOR_SIZE = pow(2,27);
+size_t VECTOR_SIZE = pow(2,7);
 
-// OpenCL kernel for each work item
+//OpenCL kernel which is run for every work item created.
 const char *leakyReLUKernel =
         "__kernel                                   \n"
         "void leakyReLUKernel(float leak,          \n"
@@ -96,11 +95,6 @@ int main(void) {
 
     /// Build program
     clStatus = clBuildProgram(program, 1, deviceList, NULL, NULL, NULL);
-
-    if (clStatus!=CL_SUCCESS){
-        printf("Error building program\n");
-    }
-
 
     /// Create the kernel
     cl_kernel kernel = clCreateKernel(program, "leakyReLUKernel", &clStatus);

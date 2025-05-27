@@ -17,7 +17,7 @@ extern "C" {
 int main()
 {
     try {
-        size_t vectorSize = pow(2,7);
+        size_t vectorSize = pow(2,27);
         std::vector<float> input(vectorSize,0.0);
         std::vector<float> output(vectorSize,0.0);
         /// initialize data
@@ -40,7 +40,7 @@ int main()
                      std::chrono::duration_cast<std::chrono::microseconds>(endCL - beginCL).count() << "[µs]\n";
         for(size_t i = 0; i<10; i++)
         {
-            std::cout << "input:736 " << input[i] << ", output: " << output[i] <<"\n";
+            std::cout << "input: " << input[i] << ", output: " << output[i] <<"\n";
         }
 
         //compute output for all neurons using CPU

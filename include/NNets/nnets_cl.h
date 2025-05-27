@@ -22,13 +22,9 @@
 extern "C" {
 #endif
 
-/// initialize OpenCL
 void initializeOpenCL(int vector_size);
-/// leakyReLU using CPU
 void leakyReLU_c(float leak, float *input, float *output, int index);
-/// leakyReLU using OpenCL
 void computeoutput(float leak, float *input, float *output, int vector_size);
-/// Release OpenCL
 void releaseOpenCL();
 
 #ifdef __cplusplus
