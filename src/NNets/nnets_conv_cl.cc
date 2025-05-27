@@ -3,6 +3,8 @@
 #include "NNets/nnets_conv_cl.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <numeric>
+#include <iostream>
 #ifdef __APPLE__
 #include <OpenCL/cl.h>
 #else
@@ -143,8 +145,8 @@ void computeoutputConv(unsigned char *input, char *mask, unsigned char *output, 
     
     /// Execute the kernel
     size_t global_size = cols*rows; // Process the entire lists
-    size_t local_size = 64;           // Process one item at a time
-    clStatus = clEnqueueNDRangeKernel(commandQueueConv, kernelConv, 1, NULL, &global_size, NULL,
+    size_t local_size = std::gcd(cols, rows); // process n items at a time (should be the power highest value that can be used to divide both numbers(cols,rows) ), NULL for automatic computation
+    clStatus = clEnqueueNDRangeKernel(commandQueueConv, kernelConv, 1, NULL, &global_size, &local_size, //change &local_size to NULL if want to make it faster
                                       0, NULL, NULL);
     
     /// Download results
